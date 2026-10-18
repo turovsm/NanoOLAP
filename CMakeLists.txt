@@ -8,10 +8,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(nano_olap
     main.cpp
     data_store.cpp
+    analytics_engine.cpp
 )
 
 # Target 2: Test Suite
 add_executable(nano_olap_tests
     test_main.cpp
     data_store.cpp
+    analytics_engine.cpp
 )
