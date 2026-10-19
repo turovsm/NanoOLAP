@@ -1,0 +1,31 @@
+name: C++20 CI
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure CMake (Release + Sanitizers + Assertions)
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_FLAGS="-Wall -Wextra -g -fno-omit-frame-pointer -fsanitize=address,undefined" \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O2 -UNDEBUG"
+
+      - name: Build Executables
+        run: cmake --build build --config Release --parallel
+
+      - name: Run Unit Tests (with ASan & UBSan)
+        run: ./build/nano_olap_tests
+
+      - name: Run Benchmark Smoke Test
+        run: ./build/nano_olap
